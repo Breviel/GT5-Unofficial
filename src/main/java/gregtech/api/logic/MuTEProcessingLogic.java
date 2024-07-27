@@ -1,17 +1,8 @@
 package gregtech.api.logic;
 
-import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.gtnewhorizons.mutecore.MuTECore;
-import com.gtnewhorizons.mutecore.api.data.ItemInputInventory;
 import com.gtnewhorizons.mutecore.api.registry.MultiTileContainer.FakeEntity;
 import com.gtnewhorizons.mutecore.shadow.dev.dominion.ecs.api.Entity;
 import com.gtnewhorizons.mutecore.shadow.dev.dominion.ecs.api.Results;
@@ -41,8 +32,7 @@ public abstract class MuTEProcessingLogic<P extends MuTEProcessingLogic<P>> impl
     // #region Logic
 
     @Nonnull
-    public void process(@Nonnull Entity entity) {
-    }
+    public void process(@Nonnull Entity entity) {}
 
     // #endregion
 }

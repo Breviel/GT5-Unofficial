@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.Constants;
@@ -35,12 +34,10 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.RecipeMapWorkable;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_SpecialFilter;
-import gregtech.api.multitileentity.MultiTileEntityItem;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.render.TextureFactory;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.blocks.GT_Item_Machines;
-import gregtech.loaders.preload.GT_Loader_MultiTileEntities;
 
 public class GT_MetaTileEntity_RecipeFilter extends GT_MetaTileEntity_SpecialFilter {
 
@@ -75,8 +72,6 @@ public class GT_MetaTileEntity_RecipeFilter extends GT_MetaTileEntity_SpecialFil
             IMetaTileEntity metaTileEntity = GT_Item_Machines.getMetaTileEntity(stack);
             if (metaTileEntity != null) {
                 return getMetaTileEntityRecipeMap(metaTileEntity);
-            } else if (stack.getItem() instanceof MultiTileEntityItem) {
-                return getMuTeRecipeMap(stack);
             }
         }
         return null;
@@ -90,10 +85,6 @@ public class GT_MetaTileEntity_RecipeFilter extends GT_MetaTileEntity_SpecialFil
     }
 
     private static RecipeMap<?> getMuTeRecipeMap(@NotNull ItemStack stack) {
-        final TileEntity tileEntity = GT_Loader_MultiTileEntities.MACHINE_REGISTRY.getReferenceTileEntity(stack);
-        if (tileEntity instanceof RecipeMapWorkable recipeMapWorkable) {
-            return recipeMapWorkable.getRecipeMap();
-        }
         return null;
     }
 

@@ -74,7 +74,6 @@ import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
 import gregtech.api.metatileentity.MetaPipeEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
-import gregtech.api.multitileentity.multiblock.base.MultiBlockPart;
 import gregtech.api.net.GT_Packet_ClientPreference;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.recipe.RecipeCategory;
@@ -96,7 +95,6 @@ import gregtech.common.render.GT_FlaskRenderer;
 import gregtech.common.render.GT_FluidDisplayStackRenderer;
 import gregtech.common.render.GT_LaserRenderer;
 import gregtech.common.render.GT_MetaGenerated_Tool_Renderer;
-import gregtech.common.render.GT_MultiTile_Renderer;
 import gregtech.common.render.GT_PollutionRenderer;
 import gregtech.common.render.GT_RenderDrone;
 import gregtech.common.render.GT_Renderer_Block;
@@ -627,7 +625,6 @@ public class GT_Client extends GT_Proxy implements Runnable {
     public void onLoad() {
         super.onLoad();
         GT_Renderer_Block.register();
-        new GT_MultiTile_Renderer();
         new GT_RenderDrone();
         new GT_LaserRenderer();
         new GT_WormholeRenderer();
@@ -818,8 +815,8 @@ public class GT_Client extends GT_Proxy implements Runnable {
 
         if (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sWireCutterList)
             || GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sSolderingToolList)
-            || (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sSoftHammerList)
-                && aTileEntity instanceof MultiBlockPart) && aEvent.player.isSneaking()) {
+            || (GT_Utility.isStackInList(aEvent.currentItem, GregTech_API.sSoftHammerList))
+                && aEvent.player.isSneaking()) {
             if (((ICoverable) aTileEntity).getCoverIDAtSide(ForgeDirection.getOrientation(aEvent.target.sideHit)) == 0)
                 drawGrid(aEvent, false, false, aEvent.player.isSneaking());
             return;
