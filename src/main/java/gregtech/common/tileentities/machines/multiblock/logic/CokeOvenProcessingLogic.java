@@ -9,13 +9,14 @@ import javax.annotation.Nullable;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
+import gregtech.api.enums.GT_Values;
 import gregtech.api.logic.FluidInventoryLogic;
 import gregtech.api.logic.ItemInventoryLogic;
 import gregtech.api.logic.MuTEProcessingLogic;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.GT_Recipe;
 
 public class CokeOvenProcessingLogic extends MuTEProcessingLogic<CokeOvenProcessingLogic> {
 
@@ -31,14 +32,13 @@ public class CokeOvenProcessingLogic extends MuTEProcessingLogic<CokeOvenProcess
 
     @Nonnull
     @Override
-    protected Object findRecipe(@Nullable RecipeMap<?> map, @Nonnull ItemInventoryLogic itemInput,
+    protected GT_Recipe findRecipe(@Nullable RecipeMap<?> map, @Nonnull ItemInventoryLogic itemInput,
         @Nonnull FluidInventoryLogic fluidInput) {
         for (ItemStack item : itemInput.getStoredItems()) {
             ItemStack output = findRecipe(item);
             if (output != null) {
                 ItemStack input = item.copy();
                 input.stackSize = 1;
-                return null;
             }
         }
         return null;
