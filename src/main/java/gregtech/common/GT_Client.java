@@ -63,6 +63,7 @@ import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.Mods;
 import gregtech.api.enums.SoundResource;
 import gregtech.api.gui.GT_GUIColorOverride;
 import gregtech.api.gui.modularui.FallbackableSteamTexture;
@@ -103,6 +104,7 @@ import gregtech.common.render.items.GT_MetaGenerated_Item_Renderer;
 import gregtech.common.tileentities.debug.GT_MetaTileEntity_AdvDebugStructureWriter;
 import gregtech.loaders.ExtraIcons;
 import gregtech.loaders.misc.GT_Bees;
+import gregtech.loaders.preload.GT_Loader_MultiTileEntities;
 import gregtech.loaders.preload.GT_PreLoad;
 import gregtech.nei.NEI_GT_Config;
 import ic2.api.tile.IWrenchable;
@@ -635,6 +637,9 @@ public class GT_Client extends GT_Proxy implements Runnable {
         }
         if (Forestry.isModLoaded()) {
             metaGeneratedItemRenderer.registerItem(GT_Bees.combs);
+        }
+        if (Mods.MuTECore.isModLoaded()) {
+            GT_Loader_MultiTileEntities.registerRenders();
         }
         new GT_MetaGenerated_Tool_Renderer();
         new GT_FlaskRenderer();
