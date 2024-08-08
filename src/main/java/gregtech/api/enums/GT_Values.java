@@ -32,6 +32,7 @@ import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.internal.IGT_Mod;
 import gregtech.api.interfaces.internal.IGT_RecipeAdder;
 import gregtech.api.net.IGT_NetworkHandler;
+import gregtech.api.util.GT_ChunkAssociatedData;
 
 /**
  * Made for static imports, this Class is just a Helper.
@@ -431,7 +432,7 @@ public class GT_Values {
      */
     public static boolean debugEntityCramming = false;
     /**
-     * Debug parameter for {@link gregtech.api.util.GT_ChunkAssociatedData}
+     * Debug parameter for {@link GT_ChunkAssociatedData}
      */
     public static boolean debugWorldData = false;
     /**
@@ -678,6 +679,24 @@ public class GT_Values {
         + EnumChatFormatting.AQUA
         + EnumChatFormatting.BOLD
         + "APenguin";
+
+    // Spotless splits this over too many lines
+    // TODO: use this dynamically
+    // spotless:off
+    public static final Supplier<String> AuthorOmni =
+        () -> "Author: " + EnumChatFormatting.GOLD + "Omni " + EnumChatFormatting.BOLD + "| "
+        + switch ((int) Math.floor(Math.random() * 5)) {
+            case 0 -> ""
+                + EnumChatFormatting.DARK_RED + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED
+                + "Aptugongermatherinn";
+            default -> switch ((int) Math.floor(Math.random() * 4)) {
+                case 0 -> "" + EnumChatFormatting.BLACK + EnumChatFormatting.ITALIC + "Pollution ";
+                case 1 -> "" + EnumChatFormatting.WHITE + EnumChatFormatting.ITALIC + "Steam ";
+                case 2 -> "" + EnumChatFormatting.YELLOW + EnumChatFormatting.ITALIC + "Klaxon ";
+                default -> "" + EnumChatFormatting.RED + EnumChatFormatting.ITALIC + "Explosion ";
+            } + EnumChatFormatting.GOLD + "Enjoyer";
+        };
+    //spotless:on
 
     // 7.5F comes from GT_Tool_Turbine_Large#getBaseDamage() given huge turbines are the most efficient now.
     public static double getMaxPlasmaTurbineEfficiencyFromMaterial(Materials material) {
