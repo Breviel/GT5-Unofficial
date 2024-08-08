@@ -1071,7 +1071,7 @@ import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreez
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_WormholeGenerator;
 import gregtech.common.tileentities.machines.multi.drone.GT_MetaTileEntity_DroneCentre;
 import gregtech.common.tileentities.machines.multi.drone.GT_MetaTileEntity_Hatch_DroneDownLink;
-import gregtech.common.tileentities.machines.multi.fuelboilers.FBBronze;
+import gregtech.common.tileentities.machines.multi.fuelboilers.LargeFiretube;
 import gregtech.common.tileentities.machines.multi.purification.GT_MetaTileEntity_Hatch_DegasifierControlHatch;
 import gregtech.common.tileentities.machines.multi.purification.GT_MetaTileEntity_LensHousing;
 import gregtech.common.tileentities.machines.multi.purification.GT_MetaTileEntity_LensIndicator;
@@ -1397,7 +1397,7 @@ public class GT_Loader_MetaTileEntities implements Runnable { // TODO CHECK CIRC
                 "Degasser Control Hatch",
                 8).getStackForm(1L));
         ItemList.Machine_Multi_LargeFiretubeBoiler.set(
-            new FBBronze(LARGE_FIRETUBE_BOILER.ID, "multimachine.firetube.large", "Large Firetube Boiler")
+            new LargeFiretube(LARGE_FIRETUBE_BOILER.ID, "multimachine.firetube.large", "Large Firetube Boiler")
                 .getStackForm(1L));
         ItemList.Machine_Multi_LargeBoiler_Bronze.set(
             new GT_MetaTileEntity_LargeBoiler_Bronze(
