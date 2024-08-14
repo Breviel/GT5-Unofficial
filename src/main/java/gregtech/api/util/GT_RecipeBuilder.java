@@ -33,7 +33,7 @@ import gregtech.api.recipe.metadata.RecipeMetadataStorage;
 import gregtech.api.util.extensions.ArrayExt;
 
 @SuppressWarnings({ "unused", "UnusedReturnValue" })
-public class GT_RecipeBuilder {
+public class  GT_RecipeBuilder {
 
     // debug mode expose problems. panic mode help you check nothing is wrong-ish without you actively monitoring
     private static final boolean DEBUG_MODE_NULL;
