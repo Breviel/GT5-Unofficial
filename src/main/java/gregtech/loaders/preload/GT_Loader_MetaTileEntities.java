@@ -436,7 +436,7 @@ import static gregtech.api.enums.MetaTileEntityIDs.ITEM_FILTER_UV;
 import static gregtech.api.enums.MetaTileEntityIDs.ITEM_FILTER_ZPM;
 import static gregtech.api.enums.MetaTileEntityIDs.LARGE_ADVANCED_GAS_TURBINE_CONTROLLER;
 import static gregtech.api.enums.MetaTileEntityIDs.LARGE_BRONZE_BOILER_CONTROLLER;
-import static gregtech.api.enums.MetaTileEntityIDs.LARGE_FIRETUBE_BOILER;
+import static gregtech.api.enums.MetaTileEntityIDs.FIRETUBE_BOILER;
 import static gregtech.api.enums.MetaTileEntityIDs.LARGE_GAS_TURBINE_CONTROLLER;
 import static gregtech.api.enums.MetaTileEntityIDs.LARGE_HEAT_EXCHANGER_CONTROLLER;
 import static gregtech.api.enums.MetaTileEntityIDs.LARGE_HP_STEAM_TURBINE_CONTROLLER;
@@ -928,6 +928,7 @@ import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 import static gregtech.api.util.GT_RecipeBuilder.TICKS;
 import static gregtech.api.util.GT_Utility.calculateRecipeEU;
 
+import gregtech.common.tileentities.machines.multi.fuelboilers.Firetube;
 import net.minecraft.util.EnumChatFormatting;
 
 import gregtech.api.GregTech_API;
@@ -1071,7 +1072,6 @@ import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_VacuumFreez
 import gregtech.common.tileentities.machines.multi.GT_MetaTileEntity_WormholeGenerator;
 import gregtech.common.tileentities.machines.multi.drone.GT_MetaTileEntity_DroneCentre;
 import gregtech.common.tileentities.machines.multi.drone.GT_MetaTileEntity_Hatch_DroneDownLink;
-import gregtech.common.tileentities.machines.multi.fuelboilers.LargeFiretube;
 import gregtech.common.tileentities.machines.multi.purification.GT_MetaTileEntity_Hatch_DegasifierControlHatch;
 import gregtech.common.tileentities.machines.multi.purification.GT_MetaTileEntity_LensHousing;
 import gregtech.common.tileentities.machines.multi.purification.GT_MetaTileEntity_LensIndicator;
@@ -1396,8 +1396,8 @@ public class GT_Loader_MetaTileEntities implements Runnable { // TODO CHECK CIRC
                 "hatch.degasifiercontrol",
                 "Degasser Control Hatch",
                 8).getStackForm(1L));
-        ItemList.Machine_Multi_LargeFiretubeBoiler.set(
-            new LargeFiretube(LARGE_FIRETUBE_BOILER.ID, "multimachine.firetube.large", "Large Firetube Boiler")
+        ItemList.Machine_Multi_FiretubeBoiler.set(
+            new Firetube(FIRETUBE_BOILER.ID, "multimachine.firetube", "Firetube Boiler")
                 .getStackForm(1L));
         ItemList.Machine_Multi_LargeBoiler_Bronze.set(
             new GT_MetaTileEntity_LargeBoiler_Bronze(
