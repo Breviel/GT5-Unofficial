@@ -254,6 +254,7 @@ public class GregTech_API {
     public static Block sBlockTintedGlass;
     public static Block sLaserRender;
     public static Block sWormholeRender;
+    public static Block sFiretubeRender;
     /**
      * Getting assigned by the Config
      */

@@ -19,6 +19,7 @@ import static gregtech.api.util.GT_RecipeBuilder.WILDCARD;
 
 import java.util.Locale;
 
+import gregtech.common.tileentities.machines.multi.fuelboilers.FiretubeRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -561,6 +562,7 @@ public class GT_Loader_Item_Block_And_Fluid implements Runnable {
         GregTech_API.sBlockTintedGlass = new GT_Block_TintedIndustrialGlass();
         GregTech_API.sLaserRender = new GT_Block_Laser();
         GregTech_API.sWormholeRender = new GT_WormholeRenderBlock();
+        GregTech_API.sFiretubeRender = new FiretubeRenderer.Block();
 
         // meta ID order, DO NOT CHANGE ORDER
 
@@ -693,6 +695,9 @@ public class GT_Loader_Item_Block_And_Fluid implements Runnable {
 
         GT_Log.out.println("GT_Mod: Registering the WormholeRender.");
         GameRegistry.registerTileEntity(TileWormhole.class, "WormholeRender");
+
+        GT_Log.out.println("GT_Mod: Registering the FiretubeRender.");
+        GameRegistry.registerTileEntity(FiretubeRenderer.Tile.class, "FiretubeRender");
 
         GT_Log.out.println("GT_Mod: Registering the BaseMetaPipeEntity.");
         GameRegistry.registerTileEntity(BaseMetaPipeEntity.class, "BaseMetaPipeEntity");

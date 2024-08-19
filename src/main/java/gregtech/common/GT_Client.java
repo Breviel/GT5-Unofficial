@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 
+import gregtech.common.tileentities.machines.multi.fuelboilers.FiretubeRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
@@ -632,6 +633,7 @@ public class GT_Client extends GT_Proxy implements Runnable {
         new GT_RenderDrone();
         new GT_LaserRenderer();
         new GT_WormholeRenderer();
+        new FiretubeRenderer();
 
         metaGeneratedItemRenderer = new GT_MetaGenerated_Item_Renderer();
         for (GT_MetaGenerated_Item item : GT_MetaGenerated_Item.sInstances.values()) {
