@@ -5,11 +5,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.DynamicDrawable;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ToggleButton;
+import com.cleanroommc.modularui.widgets.layout.Column;
+import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.layout.Row;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 
 import gregtech.api.gui.modularui.GT_CoverUIBuildContext;
 import gregtech.api.gui.modularui.GT_UITextures;
+import gregtech.api.gui.modularui2.CoverGuiData;
+import gregtech.api.gui.modularui2.GTGuiTextures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.covers.IControlsWorkCover;
 import gregtech.api.interfaces.tileentity.ICoverable;
@@ -174,6 +185,101 @@ public class GT_Cover_ControlsWork extends GT_CoverBehavior implements IControls
     @Override
     public boolean hasCoverGUI() {
         return true;
+    }
+
+    @Override
+    protected String getGuiId() {
+        return "cover.machine_controller";
+    }
+
+    @Override
+    public void addUIWidgets(CoverGuiData guiData, PanelSyncManager syncManager, Flow column) {
+        column.child(
+            new Column().crossAxisAlignment(Alignment.CrossAxis.START)
+                .marginLeft(WIDGET_MARGIN)
+                .childPadding(2)
+                .child(
+                    new Row().coverChildren()
+                        .childPadding(WIDGET_MARGIN)
+                        .child(
+                            new ToggleButton().value(new ButtonStateValue(0, guiData))
+                                .overlay(GTGuiTextures.OVERLAY_BUTTON_REDSTONE_ON)
+                                .size(16))
+                        .child(
+                            IKey.str(GT_Utility.trans("243", "Enable with Redstone"))
+                                .asWidget()))
+                .child(
+                    new Row().coverChildren()
+                        .childPadding(WIDGET_MARGIN)
+                        .child(
+                            new ToggleButton().value(new ButtonStateValue(1, guiData))
+                                .overlay(GTGuiTextures.OVERLAY_BUTTON_REDSTONE_OFF)
+                                .size(16))
+                        .child(
+                            IKey.str(GT_Utility.trans("244", "Disable with Redstone"))
+                                .asWidget()))
+                .child(
+                    new Row().coverChildren()
+                        .childPadding(WIDGET_MARGIN)
+                        .child(
+                            new ToggleButton().value(new ButtonStateValue(2, guiData))
+                                .overlay(GTGuiTextures.OVERLAY_BUTTON_CROSS)
+                                .size(16))
+                        .child(
+                            IKey.str(GT_Utility.trans("245", "Disable machine"))
+                                .asWidget()))
+                .child(
+                    new Row().coverChildren()
+                        .childPadding(WIDGET_MARGIN)
+                        .child(
+                            new ToggleButton().value(new ButtonStateValue(3, guiData))
+                                .overlay(
+                                    new DynamicDrawable(
+                                        () -> getCoverDataState(3, guiData) ? GTGuiTextures.OVERLAY_BUTTON_CHECKMARK
+                                            : GTGuiTextures.OVERLAY_BUTTON_CROSS))
+                                .size(16))
+                        .child(
+                            IKey.str(GT_Utility.trans("507", "Safe Mode"))
+                                .asWidget())));
+    }
+
+    private boolean getCoverDataState(int buttonId, CoverGuiData guiData) {
+        int coverVariable = convert(getCoverData(guiData));
+        return switch (buttonId) {
+            case 0, 1, 2 -> coverVariable % 3 == buttonId;
+            case 3 -> coverVariable > 2;
+            default -> throw new IllegalStateException();
+        };
+    }
+
+    private void updateCoverData(int buttonId, boolean enabled, CoverGuiData guiData) {
+        final int coverVariable = convert(getCoverData(guiData));
+        final int newCoverVariable = switch (buttonId) {
+            case 0, 1, 2 -> {
+                if (!enabled) {
+                    yield coverVariable;
+                }
+                boolean safeMode = coverVariable > 2;
+                yield safeMode ? buttonId + 3 : buttonId;
+            }
+            case 3 -> {
+                if (enabled && coverVariable < 3) {
+                    yield coverVariable + 3;
+                } else if (!enabled && coverVariable > 2) {
+                    yield coverVariable - 3;
+                }
+                yield coverVariable;
+            }
+            default -> throw new IllegalStateException();
+        };
+        guiData.setCoverData(new ISerializableObject.LegacyCoverData(newCoverVariable));
+    }
+
+    private class ButtonStateValue extends BooleanSyncValue {
+
+        public ButtonStateValue(int buttonId, CoverGuiData guiData) {
+            super(() -> getCoverDataState(buttonId, guiData), enabled -> updateCoverData(buttonId, enabled, guiData));
+        }
     }
 
     @Override

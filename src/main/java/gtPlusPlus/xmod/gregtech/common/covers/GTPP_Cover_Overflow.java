@@ -8,10 +8,16 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.layout.Row;
+import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 
 import gregtech.api.gui.modularui.GT_CoverUIBuildContext;
+import gregtech.api.gui.modularui2.CoverGuiData;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
@@ -155,6 +161,27 @@ public class GTPP_Cover_Overflow extends GT_CoverBehavior {
     @Override
     public boolean hasCoverGUI() {
         return true;
+    }
+
+    @Override
+    protected String getGuiId() {
+        return "cover.overflow";
+    }
+
+    @Override
+    public void addUIWidgets(CoverGuiData guiData, PanelSyncManager syncManager, Flow column) {
+        column.child(
+            new Row().coverChildren()
+                .marginLeft(WIDGET_MARGIN)
+                .childPadding(WIDGET_MARGIN)
+                // todo: numeric widget
+                .child(
+                    new TextFieldWidget().setNumbers(0, mMaxTransferRate)
+                        .value(legacyCoverDataSyncHandler(guiData))
+                        .size(70, 14))
+                .child(
+                    IKey.lang("gt.cover.overflow.threshold")
+                        .asWidget()));
     }
 
     @Override

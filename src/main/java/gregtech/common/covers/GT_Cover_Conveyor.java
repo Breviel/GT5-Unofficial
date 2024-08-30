@@ -9,11 +9,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.api.widget.IWidget;
+import com.cleanroommc.modularui.drawable.DynamicDrawable;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.BooleanSyncValue;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widgets.ToggleButton;
+import com.cleanroommc.modularui.widgets.layout.Flow;
+import com.cleanroommc.modularui.widgets.layout.Grid;
+import com.cleanroommc.modularui.widgets.layout.Row;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 
 import gregtech.api.gui.modularui.GT_CoverUIBuildContext;
 import gregtech.api.gui.modularui.GT_UITextures;
+import gregtech.api.gui.modularui2.CoverGuiData;
+import gregtech.api.gui.modularui2.GTGuiTextures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.interfaces.tileentity.IMachineProgress;
@@ -156,6 +168,162 @@ public class GT_Cover_Conveyor extends GT_CoverBehavior {
     @Override
     public boolean hasCoverGUI() {
         return true;
+    }
+
+    @Override
+    protected String getGuiId() {
+        return "cover.conveyor";
+    }
+
+    @Override
+    public void addUIWidgets(CoverGuiData guiData, PanelSyncManager syncManager, Flow column) {
+        IWidget exportImportButtons = new Row().childPadding(2)
+            .coverChildren()
+            .child(
+                new ToggleButton().value(new ButtonStateValue(0, guiData))
+                    .overlay(GTGuiTextures.OVERLAY_BUTTON_EXPORT)
+                    .addTooltipLine(GT_Utility.trans("006", "Export"))
+                    .size(16))
+            .child(
+                new ToggleButton().value(new ButtonStateValue(1, guiData))
+                    .overlay(GTGuiTextures.OVERLAY_BUTTON_IMPORT)
+                    .addTooltipLine(GT_Utility.trans("007", "Import"))
+                    .size(16));
+        IWidget exportImportLabel = IKey.str(GT_Utility.trans("229", "Export/Import"))
+            .asWidget();
+        IWidget conditionButtons = new Row().childPadding(2)
+            .coverChildren()
+            .child(
+                new ToggleButton().value(new ButtonStateValue(2, guiData))
+                    .overlay(GTGuiTextures.OVERLAY_BUTTON_CHECKMARK)
+                    .addTooltipLine(GT_Utility.trans("224", "Always On"))
+                    .size(16))
+            .child(
+                new ToggleButton().value(new ButtonStateValue(3, guiData))
+                    .overlay(GTGuiTextures.OVERLAY_BUTTON_USE_PROCESSING_STATE)
+                    .addTooltipLine(GT_Utility.trans("343", "Use Machine Processing State"))
+                    .size(16))
+            .child(
+                new ToggleButton().value(new ButtonStateValue(4, guiData))
+                    .overlay(GTGuiTextures.OVERLAY_BUTTON_USE_INVERTED_PROCESSING_STATE)
+                    .addTooltipLine(GT_Utility.trans("343.1", "Use Inverted Machine Processing State"))
+                    .size(16));
+        IWidget conditionLabel = IKey.str(GT_Utility.trans("230", "Conditional"))
+            .asWidget();
+        IWidget blockingButtons = new Row().childPadding(2)
+            .coverChildren()
+            .child(
+                new ToggleButton().value(new ButtonStateValue(5, guiData))
+                    .overlay(
+                        new DynamicDrawable(
+                            () -> getCoverDataState(0, guiData) ? GTGuiTextures.OVERLAY_BUTTON_ALLOW_INPUT
+                                : GTGuiTextures.OVERLAY_BUTTON_ALLOW_OUTPUT))
+                    .tooltipBuilder(
+                        tooltip -> tooltip.addLine(
+                            getCoverDataState(0, guiData) ? GT_Utility.trans("314", "Allow Input")
+                                : GT_Utility.trans("312", "Allow Output")))
+                    .tooltipAutoUpdate(true)
+                    .size(16))
+            .child(
+                new ToggleButton().value(new ButtonStateValue(6, guiData))
+                    .overlay(
+                        new DynamicDrawable(
+                            () -> getCoverDataState(0, guiData) ? GTGuiTextures.OVERLAY_BUTTON_BLOCK_INPUT
+                                : GTGuiTextures.OVERLAY_BUTTON_BLOCK_OUTPUT))
+                    .tooltipBuilder(
+                        tooltip -> tooltip.addLine(
+                            getCoverDataState(0, guiData) ? GT_Utility.trans("313", "Block Input")
+                                : GT_Utility.trans("311", "Block Output")))
+                    .tooltipAutoUpdate(true)
+                    .size(16));
+        IWidget blockingLabel = IKey
+            .dynamic(
+                () -> getCoverDataState(0, guiData) ? GT_Utility.trans("344", "Input Blocking")
+                    : GT_Utility.trans("344.1", "Output Blocking"))
+            .asWidget();
+        column.child(
+            new Grid().marginLeft(WIDGET_MARGIN)
+                .coverChildren()
+                .minElementMarginRight(WIDGET_MARGIN)
+                .minElementMarginBottom(2)
+                .minElementMarginTop(0)
+                .minElementMarginLeft(0)
+                .alignment(Alignment.CenterLeft)
+                .row(exportImportButtons, exportImportLabel)
+                .row(conditionButtons, conditionLabel)
+                .row(blockingButtons, blockingLabel));
+    }
+
+    /**
+     * ID 0, 1 -> Export / Import. First digit of variable.
+     * ID 2, 3, 4 -> Always / Use machine state / Inverted. 0 or 1 (mod 6) means always.
+     * 2 or 3 (mod 6) means machine state. 4 or 5 (mod 6) means inverted.
+     * ID 5, 6 -> Allow input / Block input. 6~: allow, ~5: block.
+     */
+    private boolean getCoverDataState(int buttonId, CoverGuiData guiData) {
+        int coverVariable = convert(getCoverData(guiData));
+        if (coverVariable < 0 || 11 < coverVariable) {
+            throw new IllegalStateException("Cover variable is invalid: " + coverVariable);
+        }
+        return switch (buttonId) {
+            case 0, 1 -> (0x1 & coverVariable) == buttonId;
+            case 2 -> (coverVariable % 6) < 2;
+            case 3 -> (coverVariable % 6) == 2 || (coverVariable % 6) == 3;
+            case 4 -> (coverVariable % 6) > 3;
+            case 5 -> coverVariable >= 6;
+            case 6 -> coverVariable < 6;
+            default -> throw new IllegalStateException();
+        };
+    }
+
+    private void updateCoverData(int buttonId, boolean enabled, CoverGuiData guiData) {
+        if (!enabled) return;
+        final int coverVariable = convert(getCoverData(guiData));
+        final int newCoverVariable = switch (buttonId) {
+            case 0 -> coverVariable & ~0x1;
+            case 1 -> coverVariable | 0x1;
+            case 2 -> {
+                if (coverVariable > 5) {
+                    yield 0x6 | (coverVariable & ~0xE);
+                }
+                yield (coverVariable & ~0xE);
+            }
+            case 3 -> {
+                if (coverVariable > 5) {
+                    yield 0x8 | (coverVariable & ~0xE);
+                }
+                yield 0x2 | (coverVariable & ~0xE);
+            }
+            case 4 -> {
+                if (coverVariable > 5) {
+                    yield 0xA | (coverVariable & ~0xE);
+                }
+                yield (0x4 | (coverVariable & ~0xE));
+            }
+            case 5 -> {
+                if (coverVariable <= 5) {
+                    yield coverVariable + 6;
+                }
+                yield coverVariable;
+            }
+            case 6 -> {
+                if (coverVariable > 5) {
+                    yield coverVariable - 6;
+                }
+                yield coverVariable;
+            }
+            default -> throw new IllegalStateException();
+        };
+        if (coverVariable != newCoverVariable) {
+            guiData.setCoverData(new ISerializableObject.LegacyCoverData(newCoverVariable));
+        }
+    }
+
+    private class ButtonStateValue extends BooleanSyncValue {
+
+        public ButtonStateValue(int buttonId, CoverGuiData guiData) {
+            super(() -> getCoverDataState(buttonId, guiData), enabled -> updateCoverData(buttonId, enabled, guiData));
+        }
     }
 
     @Override

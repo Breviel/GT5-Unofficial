@@ -89,10 +89,12 @@ public final class CoverInfo {
         needsUpdate = aUpdate;
     }
 
+    @NotNull
     public GT_CoverBehaviorBase<?> getCoverBehavior() {
         return coverBehavior;
     }
 
+    @NotNull
     public ISerializableObject getCoverData() {
         if (coverData != null) return coverData;
         return GregTech_API.sNoBehavior.createDataObject();
